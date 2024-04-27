@@ -1,0 +1,4 @@
+(executable
+ (public_name dmwstatus)
+ (name main)
+ (libraries dmwstatus))

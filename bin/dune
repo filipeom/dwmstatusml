@@ -1,4 +1,4 @@
 (executable
- (public_name dmwstatus)
+ (public_name dwmstatus)
  (name main)
- (libraries dmwstatus))
+ (libraries dwmstatus xlib))

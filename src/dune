@@ -1,0 +1,5 @@
+(executable
+ (public_name dwmstatus)
+ (name main)
+ (modules main battery time)
+ (libraries x11.xlib unix))

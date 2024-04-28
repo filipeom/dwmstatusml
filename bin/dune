@@ -1,4 +1,0 @@
-(executable
- (public_name dwmstatus)
- (name main)
- (libraries dwmstatus xlib))

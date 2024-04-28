@@ -19,7 +19,7 @@
  (name dwmstatus)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune xlib)
+ (depends ocaml dune x11)
  (tags
   (topics "to describe" your project)))
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

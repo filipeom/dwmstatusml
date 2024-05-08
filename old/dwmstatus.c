@@ -14,7 +14,14 @@
 #include <X11/Xlib.h>
 #include <mpd/client.h>
 
-char *tzlisbon = "Europe/Lisbon";
+/* Icons */
+static char *sep = "\ue0bb";
+static char *bolt = "\uf0e7";
+static char *cpu = "\uf4bc\u2009";
+static char *clck = "\ue384";
+static char *cal = "\uf133\u2009";
+
+static char *tzlisbon = "Europe/Lisbon";
 
 static Display *dpy;
 
@@ -192,14 +199,11 @@ char *getmpdstat() {
 }
 
 int main(void) {
-  char *battery;
-  char *status;
-  char *datetime;
-  char *temperature;
-
-  static char *sep = "\ue0bb";
-  static char *bolt = "\uf0e7";
-  static char *cpu = "\uf4bc\u2009";
+  char *bat;
+  char *st;
+  char *date;
+  char *time;
+  char *temp;
 
   if (!(dpy = XOpenDisplay(NULL))) {
     fprintf(stderr, "dwmstatus: cannot open display.\n");
@@ -207,19 +211,20 @@ int main(void) {
   }
 
   for (;; sleep(5)) {
-    battery = getbattery("/sys/class/power_supply/BAT0");
-    datetime = mktimes("\uf133\u2009 %a %d %b \ue384 %R", tzlisbon);
-    temperature = gettemperature("/sys/class/thermal", "thermal_zone8/temp");
+    time = mktimes("%R", tzlisbon);
+    date = mktimes("%a %d %b", tzlisbon);
+    bat = getbattery("/sys/class/power_supply/BAT0");
+    temp = gettemperature("/sys/class/thermal", "thermal_zone8/temp");
 
     /* status = smprintf(" %s | %s | %s", temperature, battery, datetime); */
-    status = smprintf(" %s %s %s %s %s %s %s", cpu, temperature, sep, bolt,
-                      battery, sep, datetime);
-    setstatus(status);
+    st = smprintf(" %s %s %s %s %s %s %s %s %s %s %s", cpu, temp, sep, bolt,
+                  bat, sep, cal, date, clck, time, sep);
+    setstatus(st);
 
-    free(status);
-    free(temperature);
-    free(datetime);
-    free(battery);
+    free(st);
+    free(temp);
+    free(date);
+    free(bat);
   }
 
   XCloseDisplay(dpy);

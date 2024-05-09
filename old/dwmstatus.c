@@ -62,19 +62,19 @@ char *smprintf(char *fmt, ...) {
   return p;
 }
 
-void setstatus(char *str) {
+void set_status(char *str) {
   XStoreName(dpy, DefaultRootWindow(dpy), str);
   XSync(dpy, False);
 }
 
-void settz(char *tzname) { setenv("TZ", tzname, 1); }
+void set_tz(char *tzname) { setenv("TZ", tzname, 1); }
 
-char *mktimes(char *fmt, char *tzname) {
+char *mk_times(char *fmt, char *tzname) {
   char buf[129];
   time_t tim;
   struct tm *timtm;
 
-  settz(tzname);
+  set_tz(tzname);
   tim = time(NULL);
   timtm = localtime(&tim);
   if (NULL == timtm)
@@ -86,7 +86,7 @@ char *mktimes(char *fmt, char *tzname) {
   return smprintf("%s", buf);
 }
 
-char *readfile(char *base, char *file) {
+char *read_file(char *base, char *file) {
   char *path, line[513];
   FILE *fd;
 
@@ -105,13 +105,13 @@ char *readfile(char *base, char *file) {
   return smprintf("%s", line);
 }
 
-char *getbattery(char *base) {
+char *get_battery(char *base) {
   int cap;
   char *co, status;
 
   cap = -1;
 
-  co = readfile(base, "present");
+  co = read_file(base, "present");
   if (co == NULL)
     return smprintf("");
   if (co[0] != '1') {
@@ -120,13 +120,13 @@ char *getbattery(char *base) {
   }
   free(co);
 
-  co = readfile(base, "capacity");
+  co = read_file(base, "capacity");
   if (co == NULL)
     return smprintf("");
   sscanf(co, "%d", &cap);
   free(co);
 
-  co = readfile(base, "status");
+  co = read_file(base, "status");
   if (!strncmp(co, "Discharging", 11)) {
     status = '-';
   } else if (!strncmp(co, "Charging", 8)) {
@@ -147,16 +147,16 @@ char *getbattery(char *base) {
     return smprintf("%d%% (%c)", cap, status);
 }
 
-char *gettemperature(char *base, char *sensor) {
+char *get_temperature(char *base, char *sensor) {
   char *co;
 
-  co = readfile(base, sensor);
+  co = read_file(base, sensor);
   if (co == NULL)
     return smprintf("");
   return smprintf("%02.0f°C", atof(co) / 1000);
 }
 
-char *getmpdstat() {
+char *get_mpd() {
   char *mpdstat;
   int elapsed, total;
   struct mpd_song *song;
@@ -211,15 +211,15 @@ int main(void) {
   }
 
   for (;; sleep(5)) {
-    time = mktimes("%R", tzlisbon);
-    date = mktimes("%a %d %b", tzlisbon);
-    bat = getbattery("/sys/class/power_supply/BAT0");
-    temp = gettemperature("/sys/class/thermal", "thermal_zone8/temp");
+    time = mk_times("%R", tzlisbon);
+    date = mk_times("%a %d %b", tzlisbon);
+    bat = get_battery("/sys/class/power_supply/BAT0");
+    temp = get_temperature("/sys/class/thermal", "thermal_zone8/temp");
 
     /* status = smprintf(" %s | %s | %s", temperature, battery, datetime); */
     st = smprintf(" %s %s %s %s %s %s %s %s %s %s %s", cpu, temp, sep, bolt,
-                  bat, sep, cal, date, clck, time, sep);
-    setstatus(st);
+                  bat, sep, cal, date, sep, clck, time);
+    set_status(st);
 
     free(st);
     free(temp);

@@ -1,0 +1,4 @@
+(executable
+ (public_name dwmstatus)
+ (name main)
+ (libraries x11 system))

@@ -18,7 +18,7 @@
 static char *sep = "\ue0bb";
 static char *bolt = "\uf0e7";
 static char *cpu = "\uf4bc\u2009";
-static char *clck = "\ue384";
+static char *clk = "\uf017";
 static char *cal = "\uf133\u2009";
 
 static char *tzlisbon = "Europe/Lisbon";
@@ -217,8 +217,8 @@ int main(void) {
     temp = get_temperature("/sys/class/thermal", "thermal_zone8/temp");
 
     /* status = smprintf(" %s | %s | %s", temperature, battery, datetime); */
-    st = smprintf(" %s %s %s %s %s %s %s %s %s %s %s", cpu, temp, sep, bolt,
-                  bat, sep, cal, date, sep, clck, time);
+    st = smprintf(" %s %s %s %s %s %s %s %s %s %s %s %s", sep, cpu, temp, sep,
+                  bolt, bat, sep, cal, date, sep, clk, time);
     set_status(st);
 
     free(st);

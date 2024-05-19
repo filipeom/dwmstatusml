@@ -1,4 +1,4 @@
-let time () =
+let now () =
   let time = Unix.gettimeofday () in
   Unix.localtime time
 

@@ -2,11 +2,12 @@ let now () =
   let time = Unix.gettimeofday () in
   Unix.localtime time
 
-let pp fmt tm =
-  let min = tm.Unix.tm_min in
-  let hour = tm.Unix.tm_hour in
+let pp_time fmt Unix.{ tm_min; tm_hour; _ } =
+  Format.fprintf fmt "%02d:%02d" tm_hour tm_min
+
+let pp_date fmt Unix.{ tm_mday; tm_mon; tm_wday; _ } =
   let month =
-    match tm.Unix.tm_mon with
+    match tm_mon with
     | 0 -> "Jan"
     | 1 -> "Feb"
     | 2 -> "Mar"
@@ -21,16 +22,16 @@ let pp fmt tm =
     | 11 -> "Dec"
     | _ -> assert false
   in
-  let day = tm.Unix.tm_mday in
+  let day = tm_mday in
   let weekday =
-    match tm.Unix.tm_wday with
-    | 0 -> "Sunday"
-    | 1 -> "Monday"
-    | 2 -> "Tuesday"
-    | 3 -> "Wednesday"
-    | 4 -> "Thursday"
-    | 5 -> "Friday"
-    | 6 -> "Saturday"
+    match tm_wday with
+    | 0 -> "Sun"
+    | 1 -> "Mon"
+    | 2 -> "Tue"
+    | 3 -> "Wed"
+    | 4 -> "Thu"
+    | 5 -> "Fri"
+    | 6 -> "Sat"
     | _ -> assert false
   in
-  Format.fprintf fmt "%s %02d %s %02d:%02d" weekday day month hour min
+  Format.fprintf fmt "%s %d %s" weekday day month

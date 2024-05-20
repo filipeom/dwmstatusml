@@ -1,4 +1,5 @@
 type battery_status = Charging | Discharging | Full | Unknown
+
 type t = { capacity : int; status : battery_status }
 
 let read base =
@@ -23,4 +24,6 @@ let pp_battery_status fmt = function
   | Unknown -> Format.fprintf fmt "?"
 
 let pp fmt { capacity; status } =
-  Format.fprintf fmt "%d%%%a" capacity pp_battery_status status
+  match status with
+  | Full -> Format.fprintf fmt "%d%%" capacity
+  | _ -> Format.fprintf fmt "%d%% (%a)" capacity pp_battery_status status

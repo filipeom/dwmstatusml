@@ -31,7 +31,7 @@ let () =
   while true do
     let datetime = Time.now () in
     let bat = Battery.read "/sys/class/power_supply/BAT0" in
-    let temp = Temperature.read "/sys/class/thermal/thermal_zone8/temp" in
+    let temp = Temperature.read "/sys/class/thermal/thermal_zone0/temp" in
     let status =
       asprintf " %s %a %s %a %s %a %s %a" sep pp_temp temp sep pp_battery bat
         sep pp_date datetime sep pp_time datetime

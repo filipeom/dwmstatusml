@@ -4,16 +4,20 @@ type t = { capacity : int; status : battery_status }
 
 let read base =
   let capacity =
-    In_channel.with_open_text (Filename.concat base "capacity") (fun file ->
-        int_of_string (input_line file))
+    try
+      In_channel.with_open_text (Filename.concat base "capacity") (fun file ->
+          int_of_string (input_line file))
+    with Sys_error _ -> 0
   in
   let status =
-    In_channel.with_open_text (Filename.concat base "status") (fun file ->
-        match input_line file with
-        | "Charging" -> Charging
-        | "Discharging" -> Discharging
-        | "Full" -> Full
-        | _ -> Unknown)
+    try
+      In_channel.with_open_text (Filename.concat base "status") (fun file ->
+          match input_line file with
+          | "Charging" -> Charging
+          | "Discharging" -> Discharging
+          | "Full" -> Full
+          | _ -> Unknown)
+    with Sys_error _ -> Unknown
   in
   { capacity; status }
 

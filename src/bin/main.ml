@@ -2,6 +2,8 @@ open Xlib
 open System
 open Format
 
+let btc = "\u{f15a}"
+
 let sep = "\u{e0bb}"
 
 let bolt = "\u{f0e7}"
@@ -13,6 +15,16 @@ let clock = "\u{f017}\u{2009}"
 let cal = "\u{f133}\u{2009}"
 
 let interval = 5.0
+
+let pp_btc fmt () =
+  let open Binance in
+  let btc_price = Market.Ticker.price ~symbol:"BTCUSDC" in
+  match Lwt_main.run btc_price with
+  | Ok symbol ->
+      let price = Yojson.Safe.Util.(member "price" symbol |> to_string) in
+      let price = float_of_string price in
+      Format.fprintf fmt "%s %0.02f" btc price
+  | Error { code; msg } -> Format.fprintf fmt "%d: %s" code msg
 
 let pp_temp fmt temp = fprintf fmt "%s %a" cpu Temperature.pp temp
 
@@ -33,8 +45,8 @@ let () =
     let bat = Battery.read "/sys/class/power_supply/BAT0" in
     let temp = Temperature.read "/sys/class/thermal/thermal_zone0/temp" in
     let status =
-      asprintf " %s %a %s %a %s %a %s %a" sep pp_temp temp sep pp_battery bat
-        sep pp_date datetime sep pp_time datetime
+      asprintf " %s %a %s %a %s %a %s %a %s %a" sep pp_btc () sep pp_temp temp
+        sep pp_battery bat sep pp_date datetime sep pp_time datetime
     in
 
     set_status dpy status;

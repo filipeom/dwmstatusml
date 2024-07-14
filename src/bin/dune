@@ -1,4 +1,4 @@
 (executable
  (public_name dwmstatus)
  (name main)
- (libraries xlib system))
+ (libraries xlib system binance))

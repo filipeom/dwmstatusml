@@ -1,4 +1,4 @@
 (library
  (name system)
- (modules battery time temperature)
- (libraries unix))
+ (modules bar bat bitcoin date time temp)
+ (libraries unix binance))

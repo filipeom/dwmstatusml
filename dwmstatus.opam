@@ -30,3 +30,6 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/username/reponame.git"
+pin-depends: [
+  ["xlib.dev" "git+https://github.com/filipeom/ocaml-xlib.git"]
+]

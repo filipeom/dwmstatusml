@@ -18,13 +18,16 @@ let interval = 5.0
 
 let pp_btc fmt () =
   let open Binance in
-  let btc_price = Market.Ticker.price ~symbol:"BTCUSDC" in
-  match Lwt_main.run btc_price with
-  | Ok symbol ->
-      let price = Yojson.Safe.Util.(member "price" symbol |> to_string) in
-      let price = float_of_string price in
-      Format.fprintf fmt "%s %0.02f" btc price
-  | Error { code; msg } -> Format.fprintf fmt "%d: %s" code msg
+  Format.fprintf fmt "%s " btc;
+  try
+    let btc_price = Market.Ticker.price ~symbol:"BTCUSDC" in
+    match Lwt_main.run btc_price with
+    | Ok symbol ->
+        let price = Yojson.Safe.Util.(member "price" symbol |> to_string) in
+        let price = float_of_string price in
+        Format.fprintf fmt "%0.02f" price
+    | Error { code; msg } -> Format.fprintf fmt "%d: %s" code msg
+  with _ -> Format.fprintf fmt "-1"
 
 let pp_temp fmt temp = fprintf fmt "%s %a" cpu Temperature.pp temp
 
